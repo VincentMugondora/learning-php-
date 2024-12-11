@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>PHP Superglobals and Types</title>
 </head>
-<body style="background: #01111f7f">
+<body style="background: #01111f7f; color: white; font-size: 2rem; font-family: Arial, sans-serif;">
     <?php 
+    // Start the session to use session variables
+    session_start();
+
     // Scalar types
     $int = 10;
     $float = 3.14;
@@ -27,10 +30,17 @@
     // Object types
     class Car {
         // Example class definition
+        public $brand;
+        public $model;
+
+        public function __construct($brand, $model) {
+            $this->brand = $brand;
+            $this->model = $model;
+        }
     }
 
     // Create an instance of the Car class
-    $object = new Car();
+    $object = new Car("Toyota", "Corolla");
 
     // Check if object is instance of Car
     if ($object instanceof Car) {
@@ -49,14 +59,14 @@
     echo "Request Method: " . $_SERVER["REQUEST_METHOD"] . "<br>";
 
     // Validate and access `$_GET["name"]`
-    echo "GET Name: " . (isset($_GET["name"]) ? $_GET["name"] : "No name provided.") . "<br>";
+    echo "GET Name: " . (isset($_GET["name"]) ? htmlspecialchars($_GET["name"]) : "No name provided.") . "<br>";
 
     // Validate and access `$_REQUEST["name"]`
-    echo "REQUEST Name: " . (isset($_REQUEST["name"]) ? $_REQUEST["name"] : "No name provided.") . "<br>";
+    echo "REQUEST Name: " . (isset($_REQUEST["name"]) ? htmlspecialchars($_REQUEST["name"]) : "No name provided.") . "<br>";
 
     // Files superglobal
-    if (isset($_FILES["name"])) {
-        echo "File Name: " . $_FILES["name"] . "<br>";
+    if (isset($_FILES["file"])) { // Changed "name" to "file" for clarity
+        echo "File Name: " . htmlspecialchars($_FILES["file"]["name"]) . "<br>";
     } else {
         echo "No file uploaded.<br>";
     }
@@ -70,9 +80,14 @@
         echo "No cookie set.<br>";
     }
 
-    // session
+    // Session
     $_SESSION["username"] = "Mugondora";
-    echo "Session Username: ". $_SESSION["username"]. "<br>";
+    echo "Session Username: " . $_SESSION["username"] . "<br>";
+
+    // ENV variables (example)
+    // Note: $_ENV is typically populated by the server environment
+    // Here is an example of how to access an environment variable
+    echo "Environment Variable (PATH): " . (isset($_ENV["PATH"]) ? $_ENV["PATH"] : "No PATH variable found.") . "<br>";
     ?>
 </body>
 </html>
